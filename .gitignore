@@ -1,0 +1,13 @@
+# Internal reference docs — never publish
+Background/
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Editor
+.vscode/
+.idea/
+
+# Claude Code
+.claude/
