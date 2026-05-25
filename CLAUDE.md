@@ -8,7 +8,7 @@ The consulting website for **Roxen Dynamics Inc.** (founded by Arsalan Karim), T
 ## File structure
 ```
 RDBC/
-├── website/
+├── docs/                       # Renamed from website/ — served by GitHub Pages
 │   ├── index.html              # Single page — all content lives here
 │   ├── style.css               # All styles — no preprocessor
 │   ├── script.js               # Vanilla JS: nav scroll, mobile menu, tabs, team switcher, lead form
