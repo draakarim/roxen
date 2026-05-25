@@ -1713,7 +1713,7 @@ footer {
 
 @media (max-width: 390px) {
   .team-cards { gap: 6px; }
-  .team-meta-grid { grid-template-columns: 1fr; }
+  .team-meta-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 /* ── RESPONSIVE — small phones ────────────────────────────── */
