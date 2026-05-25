@@ -318,7 +318,14 @@ document.querySelectorAll('[data-stagger]').forEach(parent => {
   }
 
   cards.forEach(function (card, i) {
-    card.addEventListener('click', function () { activateExpert(i); });
+    card.addEventListener('click', function () {
+      activateExpert(i);
+      if (window.innerWidth <= 768) {
+        setTimeout(function () {
+          document.getElementById('team-meta').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 60);
+      }
+    });
     card.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activateExpert(i); }
     });

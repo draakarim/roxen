@@ -1704,9 +1704,10 @@ footer {
 @media (max-width: 768px) {
   #team { padding: 88px 0; }
   .team-heading { font-size: 40px; }
-  .team-cards { gap: 10px; }
-  .team-card-name { font-size: 12px; }
-  .team-card-role { font-size: 11px; }
+  .team-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .team-card-name { font-size: 13px; white-space: normal; }
+  .team-card-role { font-size: 11px; white-space: normal; }
+  .team-card-social { gap: 14px; }
   .team-meta-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
