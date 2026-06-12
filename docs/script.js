@@ -73,171 +73,6 @@ document.querySelectorAll('[data-stagger]').forEach(parent => {
   });
 });
 
-// ── Hero arch milestone ─────────────────────────────────────
-(function () {
-  const archWrap = document.querySelector('.hero-arch-wrap');
-  if (!archWrap) return;
-
-  const heroEl    = document.getElementById('hero');
-  const pathFill  = archWrap.querySelector('.arch-path-fill');
-  const nodes     = Array.from(archWrap.querySelectorAll('.arch-node'));
-  const hint      = archWrap.querySelector('.arch-hint');
-
-  // Bezier t-positions for the 4 dots (matches path M 100 20 C 160 130, 160 350, 100 460)
-  const T_POSITIONS = [0.15, 0.38, 0.62, 0.85];
-  // ViewBox dimensions (must match SVG viewBox attribute)
-  const VB_W = 200, VB_H = 480;
-
-  let totalLen = 0;
-  let activeIndex = -1;
-
-  function positionNodes() {
-    totalLen = pathFill.getTotalLength();
-    pathFill.style.strokeDasharray  = totalLen;
-    pathFill.style.strokeDashoffset = totalLen; // starts empty
-
-    T_POSITIONS.forEach(function (t, i) {
-      const pt   = pathFill.getPointAtLength(t * totalLen);
-      const xPct = (pt.x / VB_W) * 100;
-      const yPct = (pt.y / VB_H) * 100;
-      nodes[i].style.left = xPct + '%';
-      nodes[i].style.top  = yPct + '%';
-    });
-  }
-
-  // Reduced-motion: skip interaction, show everything immediately
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    requestAnimationFrame(function () {
-      positionNodes();
-      nodes.forEach(function (n) { n.classList.add('completed'); });
-      nodes[nodes.length - 1].classList.add('active');
-      pathFill.style.strokeDashoffset = 0;
-    });
-    return;
-  }
-
-  // Mobile: arch is hidden, no interaction needed
-  function isMobile() {
-    return window.innerWidth <= 768;
-  }
-
-  // Init after layout paint
-  requestAnimationFrame(function () {
-    requestAnimationFrame(positionNodes);
-  });
-
-  // ── Scroll-lock state
-  let heroCompleted = false;
-  let virtualY      = 0;
-  const TOTAL_VIRTUAL = 1400;
-  let touchStartY   = 0;
-
-  function setArch(progress) {
-    progress = Math.max(0, Math.min(1, progress));
-
-    if (totalLen) {
-      pathFill.style.strokeDashoffset = totalLen * (1 - progress);
-    }
-
-    // Each dot owns 25% of the progress range; activate when its midpoint is reached
-    const raw = Math.floor(progress * 4);
-    const next = Math.min(3, raw);
-
-    if (next === activeIndex) return;
-    activeIndex = next;
-
-    nodes.forEach(function (node, i) {
-      node.classList.remove('active', 'completed');
-      if (i < activeIndex)      node.classList.add('completed');
-      else if (i === activeIndex) node.classList.add('active');
-    });
-  }
-
-  function tryAdvance(delta) {
-    if (heroCompleted || isMobile()) return false;
-    // Only intercept while page hasn't scrolled past hero
-    if (window.scrollY > heroEl.offsetHeight * 0.35) return false;
-
-    virtualY = Math.max(0, Math.min(TOTAL_VIRTUAL, virtualY + delta));
-    setArch(virtualY / TOTAL_VIRTUAL);
-
-    if (virtualY >= TOTAL_VIRTUAL) {
-      markComplete();
-    }
-    return true;
-  }
-
-  function attachListeners() {
-    window.addEventListener('wheel',      onWheel,      { passive: false });
-    window.addEventListener('touchstart', onTouchStart, { passive: true  });
-    window.addEventListener('touchmove',  onTouchMove,  { passive: false });
-    window.addEventListener('keydown',    onKeyDown,    false);
-  }
-
-  function detachListeners() {
-    window.removeEventListener('wheel',      onWheel,      false);
-    window.removeEventListener('touchstart', onTouchStart, false);
-    window.removeEventListener('touchmove',  onTouchMove,  false);
-    window.removeEventListener('keydown',    onKeyDown,    false);
-  }
-
-  function markComplete() {
-    heroCompleted = true;
-    nodes.forEach(function (n) {
-      n.classList.remove('active');
-      n.classList.add('completed');
-    });
-    nodes[nodes.length - 1].classList.add('active');
-    if (totalLen) pathFill.style.strokeDashoffset = 0;
-    if (hint) hint.classList.add('hidden');
-    detachListeners();
-  }
-
-  // Re-engage scroll-lock when user scrolls back to top of page
-  window.addEventListener('scroll', function () {
-    if (!heroCompleted || isMobile()) return;
-    if (window.scrollY < 8) {
-      heroCompleted = false;
-      virtualY = TOTAL_VIRTUAL;
-      if (hint) hint.classList.remove('hidden');
-      attachListeners();
-    }
-  }, { passive: true });
-
-  function onWheel(e) {
-    if (!tryAdvance(e.deltaY)) return;
-    e.preventDefault();
-  }
-
-  function onTouchStart(e) {
-    touchStartY = e.touches[0].clientY;
-  }
-
-  function onTouchMove(e) {
-    const delta = (touchStartY - e.touches[0].clientY) * 1.6;
-    touchStartY = e.touches[0].clientY;
-    if (!tryAdvance(delta)) return;
-    e.preventDefault();
-  }
-
-  function onKeyDown(e) {
-    if (heroCompleted || isMobile()) return;
-    if (window.scrollY > heroEl.offsetHeight * 0.35) return;
-    const STEP = { ArrowDown: 120, ArrowUp: -120, PageDown: 400, PageUp: -400, ' ': 200, End: TOTAL_VIRTUAL }[e.key];
-    if (STEP === undefined) return;
-    e.preventDefault();
-    tryAdvance(STEP);
-  }
-
-  attachListeners();
-
-  // Show dot 0 as active on load
-  requestAnimationFrame(function () {
-    requestAnimationFrame(function () {
-      setArch(0);
-    });
-  });
-})();
 
 // ── Team expert switcher ───────────────────────────────────
 (function () {
@@ -331,4 +166,312 @@ document.querySelectorAll('[data-stagger]').forEach(parent => {
     });
   });
 
+})();
+
+
+// ── Pulse: render hero + list from posts.json, then wire search + filter ──
+(function () {
+  var heroContainer = document.getElementById('pulse-hero');
+  var listContainer = document.getElementById('pulse-list');
+  if (!heroContainer || !listContainer) return;
+
+  var TAG_LABELS = {
+    health: 'Digital Health',
+    arch: 'Architecture',
+    ai: 'AI &amp; Technology',
+    strategy: 'Leadership'
+  };
+
+  fetch('posts/posts.json')
+    .then(function (res) { return res.json(); })
+    .then(function (posts) {
+      posts = posts.slice().sort(function (a, b) { return b.date.localeCompare(a.date); });
+      renderHero(posts.slice(0, 5));
+      renderList(posts);
+      document.querySelectorAll('.fade-up').forEach(function (el) { observer.observe(el); });
+      initSearchAndFilter();
+    })
+    .catch(function (err) { console.error('Failed to load posts/posts.json', err); });
+
+  function renderHero(items) {
+    if (!items.length) return;
+    var lead = items[0];
+    var rest = items.slice(1, 5);
+    var leadTag = lead.tags[0];
+
+    var html =
+      '<article class="pulse-lead-article">' +
+        '<div class="pulse-lead-body">' +
+          '<span class="pulse-tag pulse-tag--' + leadTag + '">' + TAG_LABELS[leadTag] + '</span>' +
+          '<h2 class="pulse-lead-title"><a href="posts/' + lead.file + '">' + lead.title + '</a></h2>' +
+          '<p class="pulse-lead-excerpt">' + lead.excerpt + '</p>' +
+          '<div class="pulse-meta">' +
+            '<img src="arsalan_profile2.png" alt="Arsalan Karim" class="pulse-avatar" />' +
+            '<div>' +
+              '<span class="pulse-author">Arsalan Karim</span>' +
+              '<span class="pulse-meta-sep">·</span>' +
+              '<span>' + lead.displayDate + '</span>' +
+              '<span class="pulse-meta-sep">·</span>' +
+              '<span>' + lead.readTime + ' min read</span>' +
+            '</div>' +
+          '</div>' +
+          '<a href="posts/' + lead.file + '" class="btn btn-primary" style="display:inline-block">Read Article &rarr;</a>' +
+        '</div>' +
+      '</article>';
+
+    html += '<div class="pulse-secondary-grid">';
+    rest.forEach(function (item) {
+      var tag = item.tags[0];
+      html +=
+        '<article class="pulse-mini-card fade-up">' +
+          '<div class="pulse-mini-body">' +
+            '<span class="pulse-tag pulse-tag--' + tag + '">' + TAG_LABELS[tag] + '</span>' +
+            '<h3 class="pulse-mini-title"><a href="posts/' + item.file + '">' + item.title + '</a></h3>' +
+            '<div class="pulse-meta pulse-meta--sm">' +
+              '<span class="pulse-author">Arsalan Karim</span>' +
+              '<span class="pulse-meta-sep">·</span>' +
+              '<span>' + item.displayDateShort + '</span>' +
+              '<span class="pulse-meta-sep">·</span>' +
+              '<span>' + item.readTime + ' min</span>' +
+            '</div>' +
+          '</div>' +
+        '</article>';
+    });
+    html += '</div>';
+
+    heroContainer.innerHTML = html;
+  }
+
+  function renderList(items) {
+    var html = '';
+    items.forEach(function (item) {
+      var dataTag = item.tags.join(',');
+      var dataSearchRaw = (item.title + ' ' + item.excerpt + ' ' + item.tags.map(function (t) { return TAG_LABELS[t]; }).join(' ')).toLowerCase();
+      var dataSearch = dataSearchRaw.replace(/&amp;/g, '&').replace(/"/g, '&quot;');
+      var tagsHtml = item.tags.map(function (t) {
+        return '<span class="pulse-tag pulse-tag--' + t + '">' + TAG_LABELS[t] + '</span>';
+      }).join('');
+      html +=
+        '<article class="pulse-list-item fade-up" data-tag="' + dataTag + '" data-search="' + dataSearch + '">' +
+          '<div class="pulse-list-body">' +
+            '<div class="pulse-tags">' + tagsHtml + '</div>' +
+            '<h3 class="pulse-list-title"><a href="posts/' + item.file + '">' + item.title + '</a></h3>' +
+            '<p class="pulse-list-excerpt">' + item.excerpt + '</p>' +
+            '<div class="pulse-meta pulse-meta--sm">' +
+              '<img src="arsalan_profile2.png" alt="Arsalan Karim" class="pulse-avatar pulse-avatar--sm" />' +
+              '<span class="pulse-author">Arsalan Karim</span>' +
+              '<span class="pulse-meta-sep">·</span>' +
+              '<span>' + item.displayDate + '</span>' +
+              '<span class="pulse-meta-sep">·</span>' +
+              '<span>' + item.readTime + ' min read</span>' +
+            '</div>' +
+          '</div>' +
+        '</article>';
+    });
+    listContainer.insertAdjacentHTML('afterbegin', html);
+  }
+
+  function initSearchAndFilter() {
+    var searchInput = document.querySelector('.pulse-search-input');
+    if (!searchInput) return;
+
+    var filterBtns = document.querySelectorAll('.pulse-filter-btn');
+    var listItems  = document.querySelectorAll('#pulse-list .pulse-list-item');
+    var noResults  = document.getElementById('pulse-no-results');
+    var activeFilter = 'all';
+
+    function run() {
+      var query = searchInput.value.toLowerCase().trim();
+      var visible = 0;
+      listItems.forEach(function (item) {
+        var tagMatch  = activeFilter === 'all' || item.dataset.tag.split(',').map(function(t){return t.trim();}).indexOf(activeFilter) !== -1;
+        var textMatch = !query || item.dataset.search.indexOf(query) !== -1;
+        var show = tagMatch && textMatch;
+        item.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+      if (noResults) noResults.style.display = visible === 0 ? '' : 'none';
+    }
+
+    filterBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        filterBtns.forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        activeFilter = btn.dataset.filter;
+        run();
+      });
+    });
+
+    searchInput.addEventListener('input', run);
+  }
+})();
+
+
+// ── Hero milestone card slider ──────────────────────────────
+(function () {
+  var stack = document.querySelector('.hero-milestone-stack');
+  if (!stack) return;
+  var cards = Array.from(stack.querySelectorAll('.milestone-card'));
+  var dots  = Array.from(stack.querySelectorAll('.card-dot'));
+  var INTERVAL = 7000;
+
+  // idx tracks which card index is in each role
+  var idx = { active: 0, next: 1, prev: 2 };
+
+  function snap(card, cls) {
+    card.classList.add('no-trans');
+    card.classList.remove('is-active', 'is-next', 'is-prev');
+    card.classList.add(cls);
+    void card.offsetWidth; // force reflow
+    card.classList.remove('no-trans');
+  }
+
+  function updateDots() {
+    dots.forEach(function (d, i) { d.classList.toggle('active', i === idx.active); });
+  }
+
+  // set initial positions
+  cards[idx.active].classList.add('is-active');
+  cards[idx.next].classList.add('is-next');
+  cards[idx.prev].classList.add('is-prev');
+  updateDots();
+
+  function advance(dir) {
+    if (dir > 0) {
+      // teleport prev → right, then animate active→left, next→center
+      snap(cards[idx.prev], 'is-next');
+      cards[idx.active].classList.replace('is-active', 'is-prev');
+      cards[idx.next].classList.replace('is-next', 'is-active');
+      var tmp = idx.prev;
+      idx.prev = idx.active;
+      idx.active = idx.next;
+      idx.next = tmp;
+    } else {
+      // teleport next → left, then animate active→right, prev→center
+      snap(cards[idx.next], 'is-prev');
+      cards[idx.active].classList.replace('is-active', 'is-next');
+      cards[idx.prev].classList.replace('is-prev', 'is-active');
+      var tmp = idx.next;
+      idx.next = idx.active;
+      idx.active = idx.prev;
+      idx.prev = tmp;
+    }
+    updateDots();
+  }
+
+  var timer = setInterval(function () { advance(1); }, INTERVAL);
+
+  function resetTimer() {
+    clearInterval(timer);
+    timer = setInterval(function () { advance(1); }, INTERVAL);
+  }
+
+  // dot clicks
+  dots.forEach(function (dot, i) {
+    dot.addEventListener('click', function () {
+      if (i === idx.active) return;
+      // figure out direction: forward if i is the next card
+      var dir = (i === idx.next) ? 1 : -1;
+      advance(dir);
+      resetTimer();
+    });
+  });
+
+  // scroll wheel
+  var scrollLock = false;
+  stack.addEventListener('wheel', function (e) {
+    e.preventDefault();
+    if (scrollLock) return;
+    scrollLock = true;
+    setTimeout(function () { scrollLock = false; }, 600);
+    advance(e.deltaY > 0 ? 1 : -1);
+    resetTimer();
+  }, { passive: false });
+})();
+
+/* ── Hero typewriter cycling effect ─────────────────────────── */
+(function () {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    var target = document.querySelector('.hero-typed-text');
+    if (target) target.textContent = 'strategy that never gets executed?';
+    return;
+  }
+
+  var phrases = [
+    'strategy that never gets executed?',
+    'projects that never land?',
+    'disjointed systems?',
+    'technology that does not work?',
+    'missed milestones?',
+    'siloed data?',
+    'decisions that create more problems?',
+    'architecture complexity?',
+    'too many vendors, too little clarity?',
+    'transformation that keeps stalling?',
+    "AI you can't trust or govern?",
+    "systems that don't talk to each other.",
+    'technology misaligned with the business.',
+    'systems holding you back?',
+    'vendors that overpromise and underdeliver?',
+    'data that no one actually uses?',
+    "systems that can't talk to each other?",
+    'the gap between strategy and capabilities?',
+    'a digital transformation that keeps stalling?',
+  ];
+
+  var typedEl  = document.querySelector('.hero-typed-text');
+  var cursorEl = document.querySelector('.hero-cursor');
+  if (!typedEl || !cursorEl) return;
+
+  // Fisher-Yates shuffle — randomise order, never repeats until all played
+  function shuffle(arr) {
+    for (var i = arr.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+    }
+  }
+  shuffle(phrases);
+
+  var phraseIndex = 0;
+  var charIndex   = 0;
+  var isDeleting  = false;
+
+  var INITIAL_DELAY = 600;
+  var TYPE_SPEED    = 75;
+  var DELETE_SPEED  = 42;
+  var HOLD_AFTER    = 2200;
+  var PAUSE_BETWEEN = 400;
+
+  function tick() {
+    var phrase = phrases[phraseIndex];
+
+    if (!isDeleting) {
+      charIndex++;
+      typedEl.textContent = phrase.slice(0, charIndex);
+      cursorEl.classList.add('typing');
+
+      if (charIndex === phrase.length) {
+        cursorEl.classList.remove('typing');
+        setTimeout(function () { isDeleting = true; tick(); }, HOLD_AFTER);
+        return;
+      }
+      setTimeout(tick, TYPE_SPEED);
+    } else {
+      charIndex--;
+      typedEl.textContent = phrase.slice(0, charIndex);
+      cursorEl.classList.add('typing');
+
+      if (charIndex === 0) {
+        cursorEl.classList.remove('typing');
+        isDeleting = false;
+        phraseIndex++;
+        if (phraseIndex >= phrases.length) { phraseIndex = 0; shuffle(phrases); }
+        setTimeout(tick, PAUSE_BETWEEN);
+        return;
+      }
+      setTimeout(tick, DELETE_SPEED);
+    }
+  }
+
+  setTimeout(tick, INITIAL_DELAY);
 })();

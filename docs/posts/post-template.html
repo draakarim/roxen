@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ARTICLE_TITLE}} — The Pulse | Roxen Dynamics</title>
+  <meta name="description" content="{{META_DESCRIPTION}}" />
+  <meta property="og:title" content="{{ARTICLE_TITLE}}" />
+  <meta property="og:description" content="{{OG_DESCRIPTION}}" />
+  <meta property="og:type" content="article" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="../style.css" />
+</head>
+
+<body>
+
+  <!-- ── NAV ─────────────────────────────────────── -->
+  <nav id="nav" aria-label="Primary navigation">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="../index.html" class="nav-logo"><img src="../logo-white.png" class="nav-logo-img" alt="Roxen Dynamics" /></a>
+        <ul class="nav-links">
+          <li><a href="../index.html#team">Our Team</a></li>
+          <li><a href="../index.html#expertise">Expertise</a></li>
+          <li><a href="../index.html#approach">Approach</a></li>
+          <li><a href="../index.html#services">Services</a></li>
+          <li><a href="../index.html#toolkit">Toolkit</a></li>
+          <li><a href="../pulse.html" class="nav-active">The Pulse</a></li>
+        </ul>
+        <a href="../index.html#cta" class="btn btn-primary nav-cta">Book a Call</a>
+        <button class="hamburger" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile menu -->
+  <div class="mobile-menu" aria-hidden="true">
+    <a href="../index.html#team">Our Team</a>
+    <a href="../index.html#expertise">Expertise</a>
+    <a href="../index.html#approach">Approach</a>
+    <a href="../index.html#services">Services</a>
+    <a href="../index.html#toolkit">Toolkit</a>
+    <a href="../pulse.html">The Pulse</a>
+    <a href="../index.html#cta" class="btn btn-primary" style="margin-top:8px;padding:8px 28px">Book a Call</a>
+  </div>
+
+  <main>
+
+    <!-- ── POST HERO ─────────────────────────────── -->
+    <!--
+      TAG OPTIONS (use one or more):
+        pulse-tag--health    → Digital Health
+        pulse-tag--arch      → Architecture
+        pulse-tag--ai        → AI & Technology
+        pulse-tag--strategy  → Leadership
+
+      SINGLE TAG:  <span class="pulse-tag pulse-tag--health">Digital Health</span>
+      MULTI TAG:   <div class="pulse-tags">
+                     <span class="pulse-tag pulse-tag--health">Digital Health</span>
+                     <span class="pulse-tag pulse-tag--arch">Architecture</span>
+                   </div>
+    -->
+    <header class="post-hero">
+      <div class="container">
+        <div class="post-hero-inner">
+          <a href="../pulse.html" class="post-breadcrumb">&larr; The Pulse</a>
+          <div class="pulse-tags">
+            <span class="pulse-tag pulse-tag--{{TAG_CLASS_1}}">{{TAG_LABEL_1}}</span>
+            <!-- Add more tags if relevant: <span class="pulse-tag pulse-tag--{{TAG_CLASS_2}}">{{TAG_LABEL_2}}</span> -->
+          </div>
+          <h1 class="post-title">{{ARTICLE_TITLE}}</h1>
+          <p class="post-deck">{{ARTICLE_DECK}}</p>
+          <div class="post-meta-bar">
+            <img src="../arsalan_profile2.png" alt="Arsalan Karim" class="pulse-avatar" />
+            <div class="post-meta-text">
+              <span class="pulse-author">Arsalan Karim</span>
+              <span class="pulse-meta-sep">·</span>
+              <span>Principal Consultant, Roxen Dynamics</span>
+            </div>
+            <div class="post-meta-right">
+              <span>{{PUBLISH_DATE}}</span>
+              <span class="pulse-meta-sep">·</span>
+              <span>{{READ_TIME}} min read</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ── ARTICLE BODY ──────────────────────────── -->
+    <!--
+      AVAILABLE ELEMENTS:
+
+      Opening paragraph (larger/bolder):
+        <p class="post-lead">...</p>
+
+      Section heading:
+        <h2>Section Title</h2>
+
+      Regular paragraph:
+        <p>...</p>
+
+      Pull quote — attributed:
+        <blockquote class="post-quote">
+          <p>"Quote text here."</p>
+          <cite>— Name, Title</cite>
+        </blockquote>
+
+      Pull quote — unattributed:
+        <blockquote class="post-quote">
+          <p>Statement here.</p>
+        </blockquote>
+
+      Bulleted list:
+        <ul class="post-list">
+          <li><strong>Bold label</strong> — description.</li>
+        </ul>
+
+      VOICE: Always use we/our/us — not I/my.
+    -->
+    <article class="post-body">
+      <div class="post-body-inner">
+
+        <p class="post-lead">{{OPENING_PARAGRAPH}}</p>
+
+        <h2>{{SECTION_1_HEADING}}</h2>
+
+        <p>{{SECTION_1_BODY}}</p>
+
+        <h2>{{SECTION_2_HEADING}}</h2>
+
+        <p>{{SECTION_2_BODY}}</p>
+
+        <blockquote class="post-quote">
+          <p>"{{PULL_QUOTE}}"</p>
+          <cite>— {{QUOTE_ATTRIBUTION}}</cite>
+        </blockquote>
+
+        <h2>{{SECTION_3_HEADING}}</h2>
+
+        <p>{{SECTION_3_BODY}}</p>
+
+        <ul class="post-list">
+          <li><strong>{{LIST_ITEM_1_LABEL}}</strong> — {{LIST_ITEM_1_BODY}}</li>
+          <li><strong>{{LIST_ITEM_2_LABEL}}</strong> — {{LIST_ITEM_2_BODY}}</li>
+          <li><strong>{{LIST_ITEM_3_LABEL}}</strong> — {{LIST_ITEM_3_BODY}}</li>
+        </ul>
+
+        <h2>{{CLOSING_SECTION_HEADING}}</h2>
+
+        <p>{{CLOSING_PARAGRAPH}}</p>
+
+      </div>
+    </article>
+
+    <!-- ── AUTHOR BIO ─────────────────────────────── -->
+    <!-- Do not change this block between posts -->
+    <div class="post-author-bio">
+      <div class="post-author-bio-inner">
+        <img src="../arsalan_profile2.png" alt="Arsalan Karim" class="post-author-img" />
+        <div class="post-author-info">
+          <p class="post-author-name">Arsalan Karim</p>
+          <p class="post-author-role">Principal Consultant &amp; Enterprise Architect, Roxen Dynamics</p>
+          <p class="post-author-desc">EA, MBA, MHI. 10+ years in digital health transformation across Canadian healthcare. Sessional Lecturer at IHPME, University of Toronto. Founder of Roxen Dynamics Inc.</p>
+          <a href="https://www.linkedin.com/in/arsalan-karim/" target="_blank" rel="noopener" class="post-author-linkedin">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+            Connect on LinkedIn
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── POST CTA ───────────────────────────────── -->
+    <!-- Customize eyebrow + title + text to match this article's topic -->
+    <div class="post-cta-box">
+      <div class="post-cta-inner">
+        <p class="post-cta-eyebrow">{{CTA_EYEBROW}}</p>
+        <h3 class="post-cta-title">{{CTA_TITLE}}</h3>
+        <p class="post-cta-text">{{CTA_BODY}}</p>
+        <a href="../index.html#cta" class="btn btn-primary">Book a Discovery Call &rarr;</a>
+      </div>
+    </div>
+
+    <!-- ── RELATED ARTICLES ───────────────────────── -->
+    <!-- Link to 3 other posts — do not link this post to itself -->
+    <section class="post-related">
+      <div class="container">
+        <p class="pulse-section-label">More from The Pulse</p>
+        <div class="pulse-grid pulse-grid--related">
+
+          <article class="pulse-card fade-up">
+            <div class="pulse-card-body">
+              <span class="pulse-tag pulse-tag--{{RELATED_1_TAG_CLASS}}">{{RELATED_1_TAG_LABEL}}</span>
+              <h3 class="pulse-card-title">
+                <a href="{{RELATED_1_FILE}}">{{RELATED_1_TITLE}}</a>
+              </h3>
+              <div class="pulse-meta pulse-meta--sm">
+                <span class="pulse-author">Arsalan Karim</span>
+                <span class="pulse-meta-sep">·</span>
+                <span>{{RELATED_1_READ_TIME}} min</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="pulse-card fade-up">
+            <div class="pulse-card-body">
+              <span class="pulse-tag pulse-tag--{{RELATED_2_TAG_CLASS}}">{{RELATED_2_TAG_LABEL}}</span>
+              <h3 class="pulse-card-title">
+                <a href="{{RELATED_2_FILE}}">{{RELATED_2_TITLE}}</a>
+              </h3>
+              <div class="pulse-meta pulse-meta--sm">
+                <span class="pulse-author">Arsalan Karim</span>
+                <span class="pulse-meta-sep">·</span>
+                <span>{{RELATED_2_READ_TIME}} min</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="pulse-card fade-up">
+            <div class="pulse-card-body">
+              <span class="pulse-tag pulse-tag--{{RELATED_3_TAG_CLASS}}">{{RELATED_3_TAG_LABEL}}</span>
+              <h3 class="pulse-card-title">
+                <a href="{{RELATED_3_FILE}}">{{RELATED_3_TITLE}}</a>
+              </h3>
+              <div class="pulse-meta pulse-meta--sm">
+                <span class="pulse-author">Arsalan Karim</span>
+                <span class="pulse-meta-sep">·</span>
+                <span>{{RELATED_3_READ_TIME}} min</span>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── FOOTER ────────────────────────────────── -->
+  <footer aria-label="Site footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-logo roxen-logo">Roxen<span>.</span></div>
+        <nav aria-label="Footer navigation">
+          <ul class="footer-links">
+            <li><a href="../index.html#team">Our Team</a></li>
+            <li><a href="../index.html#expertise">Expertise</a></li>
+            <li><a href="../index.html#approach">Approach</a></li>
+            <li><a href="../index.html#services">Services</a></li>
+            <li><a href="../pulse.html">The Pulse</a></li>
+            <li><a href="../index.html#cta">Contact</a></li>
+          </ul>
+        </nav>
+        <address class="footer-copy">
+          <span>&copy; 2026 Roxen Dynamics Inc.</span> &middot;
+          <a href="mailto:roxendynamics@gmail.com" rel="nofollow">roxendynamics@gmail.com</a> &middot;
+          <span>Toronto, ON, Canada</span>
+        </address>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../script.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+[
+  {
+    "file": "smartwatch-health-coach-ai.html",
+    "title": "Your Smartwatch Just Became a Health Coach — Is Your Health System Ready?",
+    "excerpt": "Samsung's new AI-powered Galaxy Watch features turn everyday wearables into proactive health coaches. We look at what the consumer health AI race means for clinical workflows and data governance.",
+    "tags": ["ai", "health"],
+    "date": "2026-06-12",
+    "displayDate": "June 12, 2026",
+    "displayDateShort": "Jun 12",
+    "readTime": 5
+  },
+  {
+    "file": "canada-health-data-backbone-vital.html",
+    "title": "Canada's $100-Million Bet on a National Health Data Backbone",
+    "excerpt": "Ottawa's new AI strategy puts $100 million behind VITAL, a pan-Canadian health data platform born in a Toronto hospital — and surfaces the federated architecture question every health system in the country will eventually have to answer.",
+    "tags": ["health", "arch"],
+    "date": "2026-06-11",
+    "displayDate": "June 11, 2026",
+    "displayDateShort": "Jun 11",
+    "readTime": 5
+  },
+  {
+    "file": "ehr-implementation-fails.html",
+    "title": "Why Your EHR Implementation Will Fail Before It Starts",
+    "excerpt": "Most failed implementations aren't execution failures — they're assessment failures. Here's what organizations get wrong before the project even kicks off, and what to do differently.",
+    "tags": ["health"],
+    "date": "2026-06-04",
+    "displayDate": "June 4, 2026",
+    "displayDateShort": "Jun 4",
+    "readTime": 6
+  },
+  {
+    "file": "current-state-assessment-cost.html",
+    "title": "The Hidden Cost of Skipping Current State Assessments",
+    "excerpt": "Organizations that skip the diagnostic phase spend 3× more on course corrections. Here's what a real current state assessment looks like and why it's the most important investment you'll make.",
+    "tags": ["arch"],
+    "date": "2026-05-28",
+    "displayDate": "May 28, 2026",
+    "displayDateShort": "May 28",
+    "readTime": 5
+  },
+  {
+    "file": "ai-healthcare-leaders-get-wrong.html",
+    "title": "AI in Healthcare: What Leaders Actually Get Wrong",
+    "excerpt": "The problem isn't the algorithm — it's the foundation. Why most healthcare AI initiatives stall at pilot, and what separates the ones that don't.",
+    "tags": ["ai"],
+    "date": "2026-05-15",
+    "displayDate": "May 15, 2026",
+    "displayDateShort": "May 15",
+    "readTime": 7
+  },
+  {
+    "file": "future-state-roadmap-executive-buyin.html",
+    "title": "Building a Future State Roadmap Executives Actually Approve",
+    "excerpt": "Roadmaps fail in the boardroom, not the delivery phase. How to frame your future state in terms that land with executives and get funded.",
+    "tags": ["strategy"],
+    "date": "2026-05-02",
+    "displayDate": "May 2, 2026",
+    "displayDateShort": "May 2",
+    "readTime": 4
+  }
+]
